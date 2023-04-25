@@ -38,8 +38,8 @@ const GetStarted = () => {
             <Image src={ t.imageUrl } alt="An abstract image" height={200} width={200} className="rounded-2xl" priority />
             <h2 className="mt-16 text-2xl font-semibold text-slate-800 mb-5">{ t.title }</h2>
             <p className="text-sm font-semibold text-slate-500 mb-20">{ t.desc }</p>
-            { buttonActive && (t.button.text ? <Button onClick={nextTabHandler} width='wide' className="group relative">
-                { t.button.text }
+            { buttonActive && ((t.button as any).text ? <Button onClick={nextTabHandler} width='wide' className="group relative">
+                { (t.button as any).text }
                 <span className="material-icons absolute right-2 opacity-0 group-hover:opacity-30 -translate-x-1 group-hover:translate-x-0 text-black pointer-events-none transition">
                     { t.button.icon }
                 </span>
