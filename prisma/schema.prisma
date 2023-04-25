@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  clerk_id String @id @unique
+}
+
+model Post {
+  id String @id @unique @default(cuid())
+  user_id String
+
+  image_url String @db.Char(255)
+
+  title String
+  content String @db.VarChar(10000)
+  summary String @db.VarChar(5000)
+  classification String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
