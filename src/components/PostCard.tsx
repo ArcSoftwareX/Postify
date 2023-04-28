@@ -7,7 +7,7 @@ import { Paragraph } from "./ui/Paragraph"
 const PostCard = ({ post }: { post: PostData }) => {
   return (
     <Link href={`/posts/${post.post.id}`}>
-        <Card className="flex">
+        <Card className="flex mb-2">
             <div className="h-32 w-32 min-w-[128px] overflow-hidden">
                 <Image src={`https://res.cloudinary.com/demo/image/fetch/${post.post.image_url}`} alt="Post image" height={300} width={300} className="object-cover h-full rounded-l-lg"/>
             </div>

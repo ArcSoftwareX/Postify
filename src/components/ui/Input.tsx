@@ -12,7 +12,8 @@ const inputVariants = cva('rounded-lg outline-none placeholder:text-black/40 fon
             default: '',
             lg: 'text-lg',
             xl: 'text-xl',
-            xxl: 'text-2xl'
+            xxl: 'text-2xl',
+            sm: 'text-sm'
         }
     },
     defaultVariants: {

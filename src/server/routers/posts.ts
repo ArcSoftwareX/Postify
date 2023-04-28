@@ -4,6 +4,7 @@ import { prisma } from '../prisma';
 import { hf } from '@/utils/huggingface';
 import { clerkClient } from '@clerk/clerk-sdk-node';
 import { TRPCError } from '@trpc/server';
+import extractText from '@/utils/extractText';
 
 export const postsRouter = router({
     posts: publicProcedure.input(z.number().min(0).int('Page should be an integer')).query(async ({ input }) => {
@@ -22,8 +23,9 @@ export const postsRouter = router({
         return posts.map(p => ({ post: { ...p, summary: p.summary.replaceAll('<n>', '\n').replaceAll(' .', '.') }, user: users.find(user => user.id === p.user_id) }))
     }),
     create: privateProcedure.input(z.object({ title: z.string().min(10).max(400), content: z.string().min(10).max(10000), imageUrl: z.string().url('Image URL should be a valid URL').min(10) })).mutation(async ({ ctx, input }) => {
-        const summary = (await hf.summarization({ model: 'google/pegasus-cnn_dailymail', inputs: input.content })).summary_text
-        const classification = (await hf.textClassification({ model: 'distilbert-base-uncased-finetuned-sst-2-english', inputs: input.content }))[0].label
+        const text = extractText(input.content)
+        const summary = (await hf.summarization({ model: 'google/pegasus-cnn_dailymail', inputs: text })).summary_text
+        const classification = (await hf.textClassification({ model: 'distilbert-base-uncased-finetuned-sst-2-english', inputs: text }))[0].label
 
         return await prisma.post.create({
             data: {

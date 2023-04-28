@@ -1,5 +1,5 @@
-import { type Editor as EditorType, EditorContent, useEditor } from '@tiptap/react'
-import React, { type KeyboardEvent, type ClipboardEvent, useState } from 'react'
+import { Editor as EditorType, EditorContent, useEditor } from '@tiptap/react'
+import React, { type KeyboardEvent, type ClipboardEvent, useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { FloatingMenu, BubbleMenu } from '@tiptap/react'
 import FloatingMenuExt from '@tiptap/extension-floating-menu'
 import BubbleMenuExt from '@tiptap/extension-bubble-menu'
@@ -49,7 +49,7 @@ const bubbleMenuItems = [
     { icon: 'checklist', click: (editor: EditorType) => editor.chain().toggleTaskList().run(), tooltip: 'Task list' },
 ]
 
-const Editor = () => {
+const Editor = forwardRef(function Editor({ active }: { active: boolean }, ref) {
     const [dialogOpen, setDialogOpen] = useState(false)
     const [dialogTab, setDialogTab] = useState(0)
 
@@ -109,6 +109,14 @@ const Editor = () => {
         }
     })
 
+    useImperativeHandle(ref, () => {
+        return {
+            getEditor() {
+                return editor
+            }
+        }
+    }, [editor])
+
     const selectMethod = (item: string): (() => void) | undefined => {
         switch (item) {
             case 'Image':
@@ -119,27 +127,6 @@ const Editor = () => {
                 return undefined
         }
     }
-
-    // const handleDragOver = (e: DragEvent<HTMLButtonElement>) => {
-    //     e.preventDefault()
-    //     e.stopPropagation()
-    //     e.dataTransfer.dropEffect = 'copy'
-    // }
-
-    // const handleDrop = (e: DragEvent<HTMLButtonElement>) => {
-    //     e.preventDefault()
-    //     e.stopPropagation()
-    //     onDrop(e.dataTransfer.files[0])
-    // }
-
-    // const onDrop = (file: File) => {
-    //     if(!allowedImageTypes.includes(file.type)) {
-    //         console.log('type not allowed');
-    //         return;
-    //     }
-    //     editor?.chain().focus().setImage({ src: file.name }).run()
-    //     setDialogOpen(false)
-    // }
 
     const handleImageInputChange = (e: KeyboardEvent<HTMLInputElement>) => {
         if(e.key === 'Enter' && e.currentTarget.value.trim().length > 0 && isValidUrl(e.currentTarget.value.trim())) {
@@ -217,8 +204,8 @@ const Editor = () => {
                     </Tooltip.Root>) }
             </BubbleMenu>
         </> }
-        <EditorContent editor={editor} className='w-full' />
+        <EditorContent contentEditable={active} editor={editor} className='w-full' />
     </>
-}
+})
 
 export default Editor

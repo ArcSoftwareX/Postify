@@ -20,7 +20,7 @@ const Posts = () => {
     <Head>
       <title>Postify - Posts</title>
     </Head>
-    <div className="max-w-5xl w-full mx-auto">
+    <div className="max-w-5xl w-full h-full mx-auto">
       <Heading size='xlg' className="mb-20 text-center">Posts</Heading>
       <Paragraph type='secondary' className="mb-6">Recent posts</Paragraph>
       { data && data.map(post => <PostCard key={post.post.id} post={post as PostData}/>) }
